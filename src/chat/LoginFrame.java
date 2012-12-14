@@ -202,6 +202,7 @@ public class LoginFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				UserStatus status = (UserStatus) cbStatus.getSelectedItem();
 				new Client(status).setVisible(true);
+				loginFrame.setVisible(false);
 			}
 		});
 		panel.add(btnLogin);

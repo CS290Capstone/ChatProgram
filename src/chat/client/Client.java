@@ -37,6 +37,11 @@ import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import javax.swing.ScrollPaneConstants;
 import java.awt.GridLayout;
+import javax.swing.JTabbedPane;
+import java.awt.event.KeyEvent;
+import javax.swing.JPopupMenu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -47,6 +52,8 @@ public class Client extends JFrame {
 	private final ButtonGroup btnGrpOnlineStatus = new ButtonGroup();
 	private JTextArea txtrMessage;
 	private JLabel lblMessagestatus;
+	private JTabbedPane tabConversations;
+	private ClientOptions optionsWindow = new ClientOptions();
 
 	/**
 	 * Launch the application.
@@ -170,6 +177,11 @@ public class Client extends JFrame {
 		menuBar.add(mnTools);
 		
 		JMenuItem mntmOptions = new JMenuItem("Options");
+		mntmOptions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				optionsWindow.setVisible(true);
+			}
+		});
 		mnTools.add(mntmOptions);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -245,16 +257,19 @@ public class Client extends JFrame {
 		txtrMessage.setLineWrap(true);
 		txtrMessage.setWrapStyleWord(true);
 		scrlMessage.setViewportView(txtrMessage);
+				
+		tabConversations = new JTabbedPane(JTabbedPane.TOP);
+		splitConversation.setLeftComponent(tabConversations);
 		
 		scrlChat = new JScrollPane();
-		splitConversation.setLeftComponent(scrlChat);
+		tabConversations.addTab("New tab", null, scrlChat, null);
 		
 		pnlConversationBase = new JPanel();
 		pnlConversationBase.setMinimumSize(new Dimension(400, 400));
 		pnlConversationBase.setBackground(Color.WHITE);
 		scrlChat.setViewportView(pnlConversationBase);
 		pnlConversationBase.setLayout(new BorderLayout(0, 0));
-		
+
 		pnlConversation = new JPanel();
 		pnlConversation.setBackground(Color.WHITE);
 		pnlConversationBase.add(pnlConversation, BorderLayout.SOUTH);
@@ -315,5 +330,4 @@ public class Client extends JFrame {
 		}
 	}
 	
-
 }
