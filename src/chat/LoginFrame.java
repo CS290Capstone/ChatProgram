@@ -285,7 +285,7 @@ public class LoginFrame extends JFrame {
 
 	private boolean validateLogin(String user, String pass){
 		// TODO: Validate credentials
-		return false;
+		return true;
 	}
 	
 	private void errorMessage(LoginError error){

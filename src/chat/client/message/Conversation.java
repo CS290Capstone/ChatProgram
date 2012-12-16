@@ -3,8 +3,14 @@ package chat.client.message;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
 public class Conversation implements Serializable{
-	private ArrayList<Recipient> recipients;
+	private ArrayList<Recipient> recipients = new ArrayList<Recipient>();
+	private ArrayList<Message> messages = new ArrayList<Message>();
+	
+	public ArrayList<Message> getMessages(){
+		return messages;
+	}
 	
 	public ArrayList<Recipient> getRecipients(){
 		return recipients;

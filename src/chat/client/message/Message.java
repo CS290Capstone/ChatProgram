@@ -21,8 +21,8 @@ public class Message implements Serializable{
 		RECIEPT
 	}
 	
-	private String user, msg;
-	private transient Date time;
+	private String user, msg;	
+	private Date time;
 	private MessageType type;
 	
 	public Message(String user, String msg){

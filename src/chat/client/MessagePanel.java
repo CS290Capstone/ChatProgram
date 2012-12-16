@@ -2,6 +2,8 @@ package chat.client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.Date;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -38,25 +40,5 @@ public class MessagePanel extends JPanel{
 	public MessagePanel(String user, String message) {
 		this(new Message(user,message));
 	}
-
-
-
-	/*class MsgPnl extends JPanel{
-		private JTextPane txtpMsg;
-		public MsgPnl(String user,String msg){
-			this.setLayout(new BorderLayout());
-			this.setBackground(Color.WHITE);
-			JLabel lbluser = new JLabel(user);
-			lbluser.setVerticalAlignment(SwingConstants.TOP);
-			this.add(lbluser, BorderLayout.WEST);
-			txtpMsg = new JTextPane();
-			txtpMsg.setEditable(false);
-			txtpMsg.setText(msg);
-			this.add(txtpMsg, BorderLayout.CENTER);
-			JLabel lbldate = new JLabel(new Date().toString());
-			lbldate.setVerticalAlignment(SwingConstants.TOP);
-			this.add(lbldate,BorderLayout.EAST);
-		}
-		
-	}*/
+	
 }

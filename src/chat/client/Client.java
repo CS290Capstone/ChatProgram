@@ -18,6 +18,9 @@ import javax.swing.JSeparator;
 import javax.swing.JMenuItem;
 
 import chat.UserStatus;
+import chat.client.message.Conversation;
+import chat.client.message.Message;
+
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
@@ -46,8 +49,8 @@ import java.awt.event.MouseEvent;
 @SuppressWarnings("serial")
 public class Client extends JFrame {
 
-	private JPanel contentPane, pnlConversation, pnlConversationBase;
-	private JScrollPane scrlChat;
+	private JPanel contentPane;//, pnlConversation, pnlConversationBase;
+	//private JScrollPane scrlChat;
 	private UserStatus status;
 	private final ButtonGroup btnGrpOnlineStatus = new ButtonGroup();
 	private JTextArea txtrMessage;
@@ -55,23 +58,20 @@ public class Client extends JFrame {
 	private JTabbedPane tabConversations;
 	private ClientOptions optionsWindow = new ClientOptions();
 
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Client frame = new Client();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
+	class UserStatusActionListener implements ActionListener{
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() instanceof AbstractButton){
+				AbstractButton b = (AbstractButton) e.getSource();
+				setUserStatus(UserStatus.valueOf(b.getName()));
+			}
+		}
+		
+	}
+	
 	public Client(UserStatus s) {
+		UserStatusActionListener statusListener = new UserStatusActionListener();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 827, 571);
@@ -87,41 +87,25 @@ public class Client extends JFrame {
 		
 		JRadioButtonMenuItem rdbtnmntmOnline = new JRadioButtonMenuItem("Online");
 		rdbtnmntmOnline.setName(UserStatus.ONLINE.name());
-		rdbtnmntmOnline.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				status = UserStatus.ONLINE;
-			}
-		});
+		rdbtnmntmOnline.addActionListener(statusListener);
 		btnGrpOnlineStatus.add(rdbtnmntmOnline);
 		mnOnlineStatus.add(rdbtnmntmOnline);
 		
 		JRadioButtonMenuItem rdbtnmntmAway = new JRadioButtonMenuItem("Away");
 		rdbtnmntmAway.setName(UserStatus.AWAY.name());
-		rdbtnmntmAway.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				status = UserStatus.AWAY;
-			}
-		});
+		rdbtnmntmAway.addActionListener(statusListener);
 		btnGrpOnlineStatus.add(rdbtnmntmAway);
 		mnOnlineStatus.add(rdbtnmntmAway);
 		
 		JRadioButtonMenuItem rdbtnmntmDnd = new JRadioButtonMenuItem("DND");
 		rdbtnmntmDnd.setName(UserStatus.DND.name());
-		rdbtnmntmDnd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				status = UserStatus.DND;
-			}
-		});
+		rdbtnmntmDnd.addActionListener(statusListener);
 		btnGrpOnlineStatus.add(rdbtnmntmDnd);
 		mnOnlineStatus.add(rdbtnmntmDnd);
 		
 		JRadioButtonMenuItem rdbtnmntmInvisible = new JRadioButtonMenuItem("Invisible");
 		rdbtnmntmInvisible.setName(UserStatus.INVISIBLE.name());
-		rdbtnmntmInvisible.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				status = UserStatus.INVISIBLE;
-			}
-		});
+		rdbtnmntmInvisible.addActionListener(statusListener);
 		btnGrpOnlineStatus.add(rdbtnmntmInvisible);
 		mnOnlineStatus.add(rdbtnmntmInvisible);
 		
@@ -206,7 +190,7 @@ public class Client extends JFrame {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				//pnlConversation.revalidate();
-				pnlConversationBase.setPreferredSize(new Dimension(scrlChat.getWidth(),pnlConversation.getHeight()));
+				//pnlConversationBase.setPreferredSize(new Dimension(scrlChat.getWidth(),pnlConversation.getHeight()));
 				//pnlConversationBase.revalidate();
 			}
 		});
@@ -261,7 +245,17 @@ public class Client extends JFrame {
 		tabConversations = new JTabbedPane(JTabbedPane.TOP);
 		splitConversation.setLeftComponent(tabConversations);
 		
-		scrlChat = new JScrollPane();
+		for (int i = 0; i < 4; i++){
+			Conversation c = new Conversation();
+			c.getMessages().add(new Message("User "+i,"Some Stupid MESSAGE!!"));
+			
+			ConversationPanel cp = new ConversationPanel(c);
+			
+			tabConversations.addTab("Convo " + (i+1), null, cp, null);
+			cp.revalidate();
+		}
+		
+		/*scrlChat = new JScrollPane();
 		tabConversations.addTab("New tab", null, scrlChat, null);
 		
 		pnlConversationBase = new JPanel();
@@ -279,7 +273,7 @@ public class Client extends JFrame {
 			public void componentResized(ComponentEvent e){
 				pnlConversationBase.setPreferredSize(new Dimension(scrlChat.getWidth(),pnlConversation.getHeight()));
 			}
-		});
+		});*/
 		
 		JPanel pnlStatusBar = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) pnlStatusBar.getLayout();
@@ -296,7 +290,7 @@ public class Client extends JFrame {
 		
 		setUserStatus(s);
 		
-		new Thread(new Runnable(){
+		/*new Thread(new Runnable(){
 			@Override
 			public void run() {
 				for (int i = 0; i < 30; i++){
@@ -315,7 +309,7 @@ public class Client extends JFrame {
 					}
 				}
 			}
-		}).start();
+		}).start();*/
 		
 	}
 	
