@@ -16,6 +16,7 @@ import javax.swing.JMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JMenuItem;
+import javax.swing.JViewport;
 
 import chat.UserStatus;
 import chat.client.message.Conversation;
@@ -155,6 +156,20 @@ public class Client extends JFrame {
 		mnConversation.add(mntmAddPeople);
 		
 		JMenuItem mntmLeaveConversation = new JMenuItem("Leave Conversation");
+		mntmLeaveConversation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Component tc = tabConversations.getSelectedComponent();
+				if (tc !=null && tc instanceof ConversationPanel){
+					tabConversations.remove(tc);
+					tc = null;
+					if (tabConversations.getComponents().length == 0){
+						JMenuItem mnuItem = (JMenuItem) e.getSource();
+						mnuItem.setEnabled(false);
+					}
+				}
+				
+			}
+		});
 		mnConversation.add(mntmLeaveConversation);
 		
 		JMenu mnTools = new JMenu("Tools");
@@ -189,9 +204,15 @@ public class Client extends JFrame {
 		splitConversation.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-				//pnlConversation.revalidate();
-				//pnlConversationBase.setPreferredSize(new Dimension(scrlChat.getWidth(),pnlConversation.getHeight()));
-				//pnlConversationBase.revalidate();
+				
+				for (Component c : tabConversations.getComponents()){
+					if (c instanceof ConversationPanel){
+						ConversationPanel cp = (ConversationPanel) c;
+						cp.getConversationBasePanel().setPreferredSize(new Dimension(cp.getScrollPanel().getWidth(),cp.getConversationPanel().getHeight()));
+						cp.getConversationBasePanel().revalidate();
+					}
+				}
+				
 			}
 		});
 		splitConversation.setResizeWeight(0.8);
@@ -245,36 +266,19 @@ public class Client extends JFrame {
 		tabConversations = new JTabbedPane(JTabbedPane.TOP);
 		splitConversation.setLeftComponent(tabConversations);
 		
+		
+		// TEMPORARY! message display testing
 		for (int i = 0; i < 4; i++){
 			Conversation c = new Conversation();
-			c.getMessages().add(new Message("User "+i,"Some Stupid MESSAGE!!"));
+			for (int j = 0; j < ((i*12)+3); j++)
+				c.getMessages().add(new Message("User "+i,"Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! " + j));
 			
 			ConversationPanel cp = new ConversationPanel(c);
 			
 			tabConversations.addTab("Convo " + (i+1), null, cp, null);
 			cp.revalidate();
 		}
-		
-		/*scrlChat = new JScrollPane();
-		tabConversations.addTab("New tab", null, scrlChat, null);
-		
-		pnlConversationBase = new JPanel();
-		pnlConversationBase.setMinimumSize(new Dimension(400, 400));
-		pnlConversationBase.setBackground(Color.WHITE);
-		scrlChat.setViewportView(pnlConversationBase);
-		pnlConversationBase.setLayout(new BorderLayout(0, 0));
-
-		pnlConversation = new JPanel();
-		pnlConversation.setBackground(Color.WHITE);
-		pnlConversationBase.add(pnlConversation, BorderLayout.SOUTH);
-		pnlConversation.setLayout(new GridLayout(0, 1, 0, 0));
-		pnlConversation.addComponentListener(new ComponentAdapter(){
-			@Override
-			public void componentResized(ComponentEvent e){
-				pnlConversationBase.setPreferredSize(new Dimension(scrlChat.getWidth(),pnlConversation.getHeight()));
-			}
-		});*/
-		
+				
 		JPanel pnlStatusBar = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) pnlStatusBar.getLayout();
 		flowLayout.setVgap(0);
@@ -290,26 +294,6 @@ public class Client extends JFrame {
 		
 		setUserStatus(s);
 		
-		/*new Thread(new Runnable(){
-			@Override
-			public void run() {
-				for (int i = 0; i < 30; i++){
-					final MessagePanel mp = new MessagePanel("username","FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER FILLER Message #"+(i+1));
-					pnlConversation.add(mp);
-					pnlConversation.revalidate();
-					int height = (int) pnlConversation.getPreferredSize().getHeight();
-					Rectangle rect = new Rectangle(0,height,10,mp.getHeight());
-					pnlConversation.scrollRectToVisible(rect);
-					pnlConversation.revalidate();
-				
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}).start();*/
 		
 	}
 	
