@@ -1,8 +1,6 @@
 package chat.client;
 
 import java.awt.BorderLayout;
-import java.awt.Rectangle;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +14,6 @@ import javax.swing.JMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JMenuItem;
-import javax.swing.JViewport;
-
 import chat.UserStatus;
 import chat.client.message.Conversation;
 import chat.client.message.Message;
@@ -40,12 +36,7 @@ import javax.swing.JButton;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import javax.swing.ScrollPaneConstants;
-import java.awt.GridLayout;
 import javax.swing.JTabbedPane;
-import java.awt.event.KeyEvent;
-import javax.swing.JPopupMenu;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {

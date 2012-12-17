@@ -24,6 +24,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
 import chat.client.Client;
+import chat.client.RegisterFrame;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -32,6 +33,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
+@SuppressWarnings("serial")
 public class LoginFrame extends JFrame {
 
 	private JPanel contentPane;

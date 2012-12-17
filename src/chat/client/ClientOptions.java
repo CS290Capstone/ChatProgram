@@ -1,13 +1,12 @@
 package chat.client;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Dialog.ModalExclusionType;
 
+@SuppressWarnings("serial")
 public class ClientOptions extends JFrame {
 
 	private JPanel contentPane;

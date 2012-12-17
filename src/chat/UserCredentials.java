@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class UserCredentials implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6489156545872614076L;
 	private String username, password, name, ip;
 	private int department;
 	

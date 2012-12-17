@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 public class Contact implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6674375979439005366L;
 	private String username;
 	private transient int userId;
 	

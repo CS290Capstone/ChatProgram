@@ -2,8 +2,6 @@ package chat.client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.Date;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
