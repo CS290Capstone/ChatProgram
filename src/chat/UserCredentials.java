@@ -42,4 +42,7 @@ public class UserCredentials implements Serializable{
 		return department;
 	}
 
+	public String toString(){
+		return String.format("[IP=\"%s\";USERNAME=\"%s\";NAME=\"%s\";]", ip, username, name);
+	}
 }

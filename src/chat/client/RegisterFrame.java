@@ -149,6 +149,7 @@ public class RegisterFrame extends JFrame {
 		panel.add(lblDepartment, gbc_lblDepartment);
 		
 		JComboBox<String> cboDepartment = new JComboBox<String>();
+		cboDepartment.setEnabled(false);
 		cboDepartment.setModel(new DefaultComboBoxModel<String>(new String[] {"Retail", "Human Resources", "IT"}));
 		GridBagConstraints gbc_cboDepartment = new GridBagConstraints();
 		gbc_cboDepartment.insets = new Insets(0, 0, 5, 5);

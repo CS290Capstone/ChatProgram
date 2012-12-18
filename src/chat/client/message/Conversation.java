@@ -11,6 +11,19 @@ public class Conversation implements Serializable{
 	private static final long serialVersionUID = -4302372160551159831L;
 	private ArrayList<Recipient> recipients = new ArrayList<Recipient>();
 	private ArrayList<Message> messages = new ArrayList<Message>();
+	private int conversationId;
+	
+	public Conversation(){
+		
+	}
+	
+	public Conversation(int id){
+		this.conversationId = id;
+	}
+	
+	private int getConversationId(){
+		return -1;
+	}
 	
 	public ArrayList<Message> getMessages(){
 		return messages;

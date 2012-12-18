@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 import chat.Contact;
+import chat.ServerPorts;
 import chat.UserCredentials;
 
 public class Server {
@@ -30,7 +32,7 @@ public class Server {
 		try {
 			Class.forName(DB_CLASS);
 			
-			registerListener = new Thread(new RegisterListener(this,8000));
+			registerListener = new Thread(new RegisterListener(this,ServerPorts.RegisterListener));
 			registerListener.start();
 			
 			
@@ -77,12 +79,25 @@ public class Server {
 			/*String loginInsert = String.format("INSERT INTO Login(uid,time,ipaddress,success) VALUES(%d, NOW(), '%s', true);", userId, user.getIp());
 			stmt.executeQuery(loginInsert);*/
 			
-			System.out.println("registered user.");
+			//System.out.println("registered user.");
 			
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			m(new String[]{"User registration failed: " + user.toString(), "Error: " + e.getMessage()});
 			return false;
 		}
 	}
+	
+	protected void m(String msg){
+		System.out.println(new Date().toString() + " > " + msg);
+	}
+	
+	protected void m(String...msg){
+		m(msg[0]);
+		if (msg.length>1)
+			for (int i = 1; i < msg.length; i++)
+				m("    "+msg[i]);
+	}
+
 }

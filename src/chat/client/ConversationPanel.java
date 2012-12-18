@@ -32,6 +32,10 @@ public class ConversationPanel extends JPanel{
 		return pnlConversation;
 	}
 	
+	protected Conversation getConversation(){
+		return convo;
+	}
+	
 	public ConversationPanel(Conversation convo){
 		this.convo = convo;
 		
