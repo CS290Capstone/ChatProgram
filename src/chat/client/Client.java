@@ -14,6 +14,8 @@ import javax.swing.JMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JMenuItem;
+
+import chat.ServerPorts;
 import chat.UserStatus;
 import chat.client.message.Conversation;
 import chat.client.message.Message;
@@ -30,6 +32,11 @@ import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import java.awt.Color;
 import javax.swing.JTextArea;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
@@ -285,7 +292,12 @@ public class Client extends JFrame {
 		
 		setUserStatus(s);
 		
+		new Thread(new ClientStatusListener(this,ServerPorts.ClientStatusListener)).start();
 		
+	}
+	
+	public UserStatus getUserStatus(){
+		return status;
 	}
 	
 	private void setUserStatus(UserStatus s){
@@ -297,6 +309,44 @@ public class Client extends JFrame {
 				break;
 			}
 		}
+	}
+	
+	private class ClientStatusListener implements Runnable{
+		private final Client client;
+		private ServerSocket svrSocket;
+		
+		public ClientStatusListener(Client client, int port) {
+			this.client = client;
+			try {
+				svrSocket = new ServerSocket(port);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void run() {
+			while(true){
+				try {
+					Socket con = svrSocket.accept();
+					
+					ObjectOutputStream out = new ObjectOutputStream(con.getOutputStream());
+					
+					out.writeObject(client.getUserStatus());
+					
+					out.flush();
+					out.close();
+					
+					Thread.sleep(1000);
+					
+				} catch (IOException | InterruptedException e) {
+					e.printStackTrace();
+					break;
+				}
+			}
+			
+		}
+		
 	}
 	
 }

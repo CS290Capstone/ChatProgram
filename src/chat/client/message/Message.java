@@ -14,10 +14,12 @@ public class Message implements Serializable{
 	 */
 	private static final long serialVersionUID = 6329945084225106898L;
 
-	enum MessageType{
+	public enum MessageType{
 		TEXT,
 		FILE_TRANSFER,
-		COMMAND,
+		CMD_GET_CONTACTS,
+		CMD_GET_CONVERSATION,
+		CMD_GET_USERSTATUS,
 		RECIEPT
 	}
 	
