@@ -13,11 +13,11 @@ public class RegisterListener implements Runnable{
 	private final Server s;
 	
 	private ServerSocket svrSocket;
-	private int port;
+	//private int port;
 	
 	public RegisterListener(Server svr, int port){
 		this.s = svr;
-		this.port = port;
+		//this.port = port;
 		try {
 			svrSocket = new ServerSocket(port);
 		} catch (IOException e) {
@@ -48,11 +48,11 @@ public class RegisterListener implements Runnable{
 				if (s.userExists(user)){
 					out.writeBoolean(false); // Tell client registration failed
 					//System.out.println("Sent false");
-					s.m("User registration failed: " + user.toString());
+					Server.m("User registration failed: " + user.toString());
 				}else{
 					if (s.registerUser(user)){
 						out.writeBoolean(true);// Tell client registration succeeded
-						s.m("User registered: " + user.toString());
+						Server.m("User registered: " + user.toString());
 					}else{
 						out.writeBoolean(false);
 						// Failed message sent written to console by Server.class
