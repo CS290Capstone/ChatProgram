@@ -9,13 +9,18 @@ public class UserCredentials implements Serializable{
 	 */
 	private static final long serialVersionUID = -6489156545872614076L;
 	private String username, password, name, ip;
-	private int department;
+	private int department, userid;
 	
 	public UserCredentials(String u, String p, String name, int d){
 		this.username = u;
 		this.password = p;
 		this.name = name;
 		this.department = d;
+	}
+	
+	public UserCredentials(Contact contact){
+		this.username = contact.getUserName();
+		this.password = this.name = null;
 	}
 	
 	public void setIp(String ip){
@@ -28,6 +33,10 @@ public class UserCredentials implements Serializable{
 	
 	public String getUser(){
 		return username;
+	}
+	
+	public int getUserId(){
+		return userid;
 	}
 	
 	public String getPass(){
