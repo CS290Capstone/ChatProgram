@@ -13,14 +13,21 @@ public class Conversation implements Serializable{
 	private ArrayList<Message> messages = new ArrayList<Message>();
 	private int conversationId;
 	
-	public Conversation(){
-		
-	}
-	
 	public Conversation(int id){
 		this.conversationId = id;
+		init();
 	}
 	
+	public Conversation() {
+		this.conversationId = getConversationId();
+		init();
+	}
+	
+	private void init(){
+		this.recipients = getRecipients();
+		this.messages = getMessages();
+	}
+
 	private int getConversationId(){
 		return -1;
 	}
@@ -37,4 +44,5 @@ public class Conversation implements Serializable{
 		if (recipients!=null && recipients.contains(user))
 			recipients.remove(user);
 	}
+	
 }
