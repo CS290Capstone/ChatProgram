@@ -10,7 +10,7 @@ public class Conversation implements Serializable{
 	 */
 	private static final long serialVersionUID = -4302372160551159831L;
 	private ArrayList<Recipient> recipients = new ArrayList<Recipient>();
-	private ArrayList<Message> messages = new ArrayList<Message>();
+	private transient ArrayList<Message> messages = new ArrayList<Message>();
 	private int conversationId;
 	
 	public Conversation(int id){
@@ -29,7 +29,7 @@ public class Conversation implements Serializable{
 	}
 
 	private int getConversationId(){
-		return -1;
+		return conversationId;
 	}
 	
 	public ArrayList<Message> getMessages(){

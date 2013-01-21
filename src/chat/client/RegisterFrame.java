@@ -160,6 +160,7 @@ public class RegisterFrame extends JFrame {
 		
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
+			@Deprecated
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {

@@ -269,7 +269,7 @@ public class Client extends JFrame {
 		for (int i = 0; i < 4; i++){
 			Conversation c = new Conversation();
 			for (int j = 0; j < ((i*12)+3); j++)
-				c.getMessages().add(new Message("User "+i,"Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! " + j));
+				c.getMessages().add(new Message("User "+i,"Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! Some Stupid MESSAGE!! " + j, j));
 			
 			ConversationPanel cp = new ConversationPanel(c);
 			
@@ -292,7 +292,7 @@ public class Client extends JFrame {
 		
 		setUserStatus(s);
 		
-		new Thread(new ClientStatusListener(this,ServerPorts.ClientStatusListener)).start();
+		new Thread(new ClientListener(this,ServerPorts.ClientListener)).start();
 		
 	}
 	
@@ -311,11 +311,11 @@ public class Client extends JFrame {
 		}
 	}
 	
-	private class ClientStatusListener implements Runnable{
+	private class ClientListener implements Runnable{
 		private final Client client;
 		private ServerSocket svrSocket;
 		
-		public ClientStatusListener(Client client, int port) {
+		public ClientListener(Client client, int port) {
 			this.client = client;
 			try {
 				svrSocket = new ServerSocket(port);

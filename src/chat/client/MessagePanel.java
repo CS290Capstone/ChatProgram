@@ -36,7 +36,7 @@ public class MessagePanel extends JPanel{
 	}
 
 	public MessagePanel(String user, String message) {
-		this(new Message(user,message));
+		this(new Message(user,message,1));
 	}
 	
 }

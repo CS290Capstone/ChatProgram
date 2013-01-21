@@ -49,7 +49,7 @@ public class Contact implements Serializable{
 			ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 
-			out.writeObject(MessageType.CMD_GET_CONTACTS);
+			out.writeObject(MessageType.GET_CONTACTS);
 			out.writeObject(new UserCredentials(this));
 			
 			UserStatus newStatus = (UserStatus) in.readObject();
@@ -82,7 +82,7 @@ public class Contact implements Serializable{
 			ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 
-			out.writeObject(MessageType.CMD_GET_CONTACTS);
+			out.writeObject(MessageType.GET_CONTACTS);
 			out.writeObject(user);
 			
 			ArrayList<Contact> contacts = (ArrayList<Contact>) in.readObject();

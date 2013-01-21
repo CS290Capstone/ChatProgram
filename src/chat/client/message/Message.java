@@ -17,23 +17,32 @@ public class Message implements Serializable{
 	public enum MessageType{
 		TEXT,
 		FILE_TRANSFER,
-		CMD_GET_CONTACTS,
-		CMD_GET_CONVERSATION,
-		CMD_GET_USERSTATUS,
+		
+		REGISTER,
+		GET_CONTACTS,
+		GET_CONVERSATION,
+		GET_USERSTATUS,
+		
 		RECIEPT
 	}
 	
 	private String user, msg;	
 	private Date time;
 	private MessageType type;
+	private int conversationId;
 	
-	public Message(String user, String msg){
+	public Message(String user, String msg, int conversationId){
 		this.user = user;
 		this.msg = msg;
 		this.time = new Date();
 		this.type = MessageType.TEXT;
+		this.conversationId = conversationId;
 	}
 		
+	public int getConversationId(){
+		return conversationId;
+	}
+	
 	public String getSender(){
 		return user;
 	}
