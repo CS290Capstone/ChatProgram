@@ -10,12 +10,9 @@ import chat.UserCredentials;
 import chat.client.message.Message.MessageType;
 
 public class CommandListener implements Runnable{
-	
-	private final Server s;
 	private ServerSocket svrSocket;
 	
-	public CommandListener(Server svr, int port){
-		this.s = svr;
+	public CommandListener(int port){
 		try{
 			svrSocket = new ServerSocket(port);
 		}catch (IOException e){
@@ -27,10 +24,10 @@ public class CommandListener implements Runnable{
 	public void run() {
 		while (true){
 			try {
-				Socket con = svrSocket.accept();
+				Socket socket = svrSocket.accept();
 				
-				ObjectOutputStream out = new ObjectOutputStream(con.getOutputStream());
-				ObjectInputStream in = new ObjectInputStream(con.getInputStream());
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				
 				// expecting MessageType enum
 				
@@ -38,26 +35,32 @@ public class CommandListener implements Runnable{
 				UserCredentials user = (UserCredentials) in.readObject();
 				
 				switch (m){
-					case CMD_GET_CONTACTS:
+					case GET_CONTACTS:
 						out.writeObject(Server.getContacts(user));
 						break;
-					case CMD_GET_CONVERSATION:
+					case GET_CONVERSATION:
 						
 						break;
-					case CMD_GET_USERSTATUS:
+					case GET_USERSTATUS:
 						
 						break;
+					case REGISTER:
+						//new Thread(new Registerer(con,user)).start();
+						Server.getServer().getExecutor().submit(new Registerer(socket,user));
+						break;
+						
 					case TEXT:
-						
+						Server.getServer().getExecutor().submit(new Messager(socket, user));
 						break;
+						
 					case FILE_TRANSFER:
 						
 						break;
 					case RECIEPT:
-						
+						// XXX: Client responds with answer to a file transfer or other request.
 						break;
 					default: // unexpected type
-						Server.m("Unexpected MessageType enum recieved ("+m.name()+") from: "+con.getInetAddress()+".");
+						Server.m("Unexpected MessageType enum recieved ("+m.name()+") from: "+socket.getInetAddress()+".");
 				}
 				
 			} catch (IOException e) {

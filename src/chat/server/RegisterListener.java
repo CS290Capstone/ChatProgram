@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import chat.UserCredentials;
 
+@Deprecated
 public class RegisterListener implements Runnable{
 	
 	private final Server s;
@@ -58,8 +59,6 @@ public class RegisterListener implements Runnable{
 						// Failed message sent written to console by Server.class
 					}
 					//System.out.println("Sent true");
-					
-					
 				}
 				out.flush();
 				out.close();

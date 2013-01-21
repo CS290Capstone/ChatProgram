@@ -2,7 +2,6 @@ package chat.server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,6 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import chat.Contact;
 import chat.ServerPorts;
@@ -25,7 +27,9 @@ public class Server {
 	private String DB_URL;// = "jdbc:mysql://skorcraft.net/"+DB_SCHEMA+"?user="+DB_USER+"&password="+DB_PASS;
 	private String DB_CLASS = "com.mysql.jdbc.Driver";	
 	
-	private Thread registerListener, commandListener;
+	private Thread /*registerListener,*/ commandListener;
+	private static Server server;
+	private final ThreadPoolExecutor executor;
 	
 	public static void main(String args[]){
 		
@@ -56,27 +60,37 @@ public class Server {
 			m("Server startup failed: Null database login input!");
 		}else{
 			a = String.format("jdbc:mysql://%s/%s?user=%s&password=%s", a,s,u,p);
-			new Server(a);
+			Server.server = new Server(a);
 		}
 		
 		
 	}
 	
+	protected synchronized ThreadPoolExecutor getExecutor(){
+		return executor;
+	}
+	
 	private Server(String url){
+		//Server.server = this;
 		this.DB_URL = url;
+		
+		this.executor = new ThreadPoolExecutor(10,10,1000,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(1000)); 
+		
 		try {
 			Class.forName(DB_CLASS);
 			
-			registerListener = new Thread(new RegisterListener(this,ServerPorts.RegisterListener));
-			commandListener = new Thread(new CommandListener(this,ServerPorts.CommandListener));
-			
-			registerListener.start();
-			commandListener.start();
-			
+			commandListener = new Thread(new CommandListener(ServerPorts.CommandListener));
+			executor.submit(commandListener);
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		this.executor.shutdown();
+	}
+	
+	public static Server getServer(){
+		return Server.server;
 	}
 	
 	protected static ArrayList<Contact> getContacts(UserCredentials user){
@@ -141,7 +155,7 @@ public class Server {
 
 	protected static UserStatus getUserStatus(Contact contact){
 		try{
-			Socket sock = new Socket("localhost",ServerPorts.ClientStatusListener);
+			Socket sock = new Socket("localhost",ServerPorts.ClientListener);
 			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			UserStatus status = (UserStatus) in.readObject();
 			return status;
