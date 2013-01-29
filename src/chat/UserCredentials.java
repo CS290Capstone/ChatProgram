@@ -34,8 +34,10 @@ public class UserCredentials implements Serializable{
 	public String getUser(){
 		return username;
 	}
-	
+		
 	public int getUserId(){
+		// TODO: Get userID from server
+		
 		return userid;
 	}
 	

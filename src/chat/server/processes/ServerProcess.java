@@ -1,6 +1,7 @@
-package chat.server;
+package chat.server.processes;
 
 import chat.UserCredentials;
+import chat.server.Server;
 
 abstract class ServerProcess implements Runnable{
 

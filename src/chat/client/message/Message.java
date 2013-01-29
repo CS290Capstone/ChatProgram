@@ -15,20 +15,19 @@ public class Message implements Serializable{
 	private static final long serialVersionUID = 6329945084225106898L;
 
 	public enum MessageType{
-		TEXT,
-		FILE_TRANSFER,
+		TEXT, //
+		FILE_TRANSFER, //
+		RECIEPT, //
+		REGISTER, //
 		
-		REGISTER,
 		GET_CONTACTS,
 		GET_CONVERSATION,
-		GET_USERSTATUS,
-		
-		RECIEPT
+		GET_USERSTATUS
 	}
 	
 	private String user, msg;	
 	private Date time;
-	private MessageType type;
+	private MessageType type = MessageType.TEXT;
 	private int conversationId;
 	
 	public Message(String user, String msg, int conversationId){
@@ -37,6 +36,13 @@ public class Message implements Serializable{
 		this.time = new Date();
 		this.type = MessageType.TEXT;
 		this.conversationId = conversationId;
+	}
+	
+	public Message(String user, MessageType type, int conversationId){
+		this.user = user;
+		this.time = new Date();
+		this.conversationId = conversationId;
+		this.type = type;
 	}
 		
 	public int getConversationId(){

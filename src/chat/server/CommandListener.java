@@ -8,6 +8,8 @@ import java.net.Socket;
 
 import chat.UserCredentials;
 import chat.client.message.Message.MessageType;
+import chat.server.processes.Messager;
+import chat.server.processes.Registerer;
 
 public class CommandListener implements Runnable{
 	private ServerSocket svrSocket;
@@ -36,7 +38,7 @@ public class CommandListener implements Runnable{
 				
 				switch (m){
 					case GET_CONTACTS:
-						out.writeObject(Server.getContacts(user));
+						out.writeObject(Server.getServer().getContacts(user));
 						break;
 					case GET_CONVERSATION:
 						
@@ -45,7 +47,6 @@ public class CommandListener implements Runnable{
 						
 						break;
 					case REGISTER:
-						//new Thread(new Registerer(con,user)).start();
 						Server.getServer().getExecutor().submit(new Registerer(socket,user));
 						break;
 						

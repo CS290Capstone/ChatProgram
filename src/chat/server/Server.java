@@ -93,29 +93,58 @@ public class Server {
 		return Server.server;
 	}
 	
-	protected static ArrayList<Contact> getContacts(UserCredentials user){
-		// TODO: Compile contact list for given user
-		
-		/*
-		 * 	SELECT username FROM user AS u, usercontacts AS uc
-		 * 		WHERE u.uid = uc.uid
-		 * 			AND u.uid = userId
-		 * 
-		 * */
+	protected ArrayList<Contact> getContacts(UserCredentials user){		
+		try {
+			Connection con = DriverManager.getConnection(DB_URL);
+			Statement stmt = con.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(String.format("SELECT UC.username FROM User AS u, UserContacts as UC WHERE u.uid = uc.uid AND u.uid = '%s'",user.getUserId()));
+			
+			if (rs != null){
+				ArrayList<Contact> contacts = new ArrayList<Contact>();
+				while (rs.next()){
+					String username = rs.getString("username");
+					String displayname = rs.getString("displayname");
+					int userid = rs.getInt("uid");
+					contacts.add(new Contact(username,displayname,userid,null));
+				}
+				return contacts;
+			}
+		} catch (SQLException e) {
+			m(new String[]{"Contact retrieval failed: " + user.toString(), "Error: " + e.getMessage()});
+		}
 		return null;
 	}
 	
-	private static boolean validateCredentials(UserCredentials user){
-		// TODO: Verify credentials.
-		return true;
-	}
-	
-	protected boolean userExists(UserCredentials user){
-		// TODO: Check to see if user exists.
+	public static boolean validateCredentials(UserCredentials user){
+		try{
+			Connection con = DriverManager.getConnection(Server.getServer().DB_URL);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(String.format("SELECT password FROM User WHERE username = '%s';", user.getUser()));
+			if (rs != null){
+				if (rs.getString("password").equals(user.getPass())) return true;
+			}
+			
+		}catch (SQLException e){
+			m(new String[]{"Credential validation failed: " + user.toString(), "Error: " + e.getMessage()});
+		}
 		return false;
 	}
 	
-	protected boolean registerUser(UserCredentials user){
+	public static boolean userExists(UserCredentials user){
+		try{
+			Connection con = DriverManager.getConnection(Server.getServer().DB_URL);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(String.format("SELECT uid FROM User WHERE username = '%s';", user.getUser()));
+			if (rs != null) return true;
+			
+		}catch (SQLException e){
+			m(new String[]{"User Exists check failed: " + user.toString(), "Error: " + e.getMessage()});
+		}
+		return false;
+	}
+	
+	public boolean registerUser(UserCredentials user){
 		try {
 			Connection con = DriverManager.getConnection(DB_URL);
 			Statement stmt = con.createStatement();
@@ -142,7 +171,7 @@ public class Server {
 		}
 	}
 	
-	protected static void m(String msg){
+	public static void m(String msg){
 		System.out.println(new Date().toString() + " > " + msg);
 	}
 	

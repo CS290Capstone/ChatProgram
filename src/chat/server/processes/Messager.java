@@ -1,4 +1,4 @@
-package chat.server;
+package chat.server.processes;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import chat.UserCredentials;
+import chat.client.message.Conversation;
 import chat.client.message.Message;
 import chat.client.message.Recipient;
 
@@ -26,13 +27,14 @@ public class Messager extends ServerProcess{
 	@Override
 	public void run() {
 		try {
-			
 			//ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			
 			final Message msg = (Message) in.readObject();
+			Conversation conv = Conversation.getConversation(msg.getConversationId());
 			
-			ArrayList<Recipient> recipients = (ArrayList<Recipient>) in.readObject();
+			ArrayList<Recipient> recipients = conv.getRecipients();
+			//ArrayList<Recipient> recipients = (ArrayList<Recipient>) in.readObject();
 			
 			ThreadPoolExecutor executor = new ThreadPoolExecutor(10,10,100,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(1000));
 			for (final Recipient r : recipients){

@@ -45,4 +45,9 @@ public class Conversation implements Serializable{
 			recipients.remove(user);
 	}
 	
+	public static Conversation getConversation(int conversationId){
+		// TODO: Retrieve conversation from Server
+		return null;
+	}
+	
 }

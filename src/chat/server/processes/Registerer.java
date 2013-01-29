@@ -1,10 +1,11 @@
-package chat.server;
+package chat.server.processes;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import chat.UserCredentials;
+import chat.server.Server;
 
 public class Registerer extends ServerProcess{
 	
@@ -23,7 +24,7 @@ public class Registerer extends ServerProcess{
 			ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
 			//ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			
-			if (server.userExists(user)){
+			if (Server.userExists(user)){
 				out.writeBoolean(false); // Tell client registration failed
 				//System.out.println("Sent false");
 				Server.m("User registration failed: " + user.toString());
