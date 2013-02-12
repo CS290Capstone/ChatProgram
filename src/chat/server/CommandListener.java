@@ -2,12 +2,12 @@ package chat.server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import chat.UserCredentials;
 import chat.client.message.Message.MessageType;
+import chat.server.processes.ContactRetriever;
 import chat.server.processes.Messager;
 import chat.server.processes.Registerer;
 
@@ -28,7 +28,7 @@ public class CommandListener implements Runnable{
 			try {
 				Socket socket = svrSocket.accept();
 				
-				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				//ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				
 				// expecting MessageType enum
@@ -38,7 +38,7 @@ public class CommandListener implements Runnable{
 				
 				switch (m){
 					case GET_CONTACTS:
-						out.writeObject(Server.getServer().getContacts(user));
+						Server.getServer().getExecutor().submit(new ContactRetriever(socket,user));
 						break;
 					case GET_CONVERSATION:
 						
@@ -55,7 +55,7 @@ public class CommandListener implements Runnable{
 						break;
 						
 					case FILE_TRANSFER:
-						
+						// XXX: File transfer
 						break;
 					case RECIEPT:
 						// XXX: Client responds with answer to a file transfer or other request.

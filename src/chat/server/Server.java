@@ -93,6 +93,7 @@ public class Server {
 		return Server.server;
 	}
 	
+	@Deprecated
 	protected ArrayList<Contact> getContacts(UserCredentials user){		
 		try {
 			Connection con = DriverManager.getConnection(DB_URL);
@@ -182,6 +183,10 @@ public class Server {
 				m("    "+msg[i]);
 	}
 
+	public String getDbUrl(){
+		return this.DB_URL;
+	}
+	
 	protected static UserStatus getUserStatus(Contact contact){
 		try{
 			Socket sock = new Socket("localhost",ServerPorts.ClientListener);

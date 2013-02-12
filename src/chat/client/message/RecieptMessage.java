@@ -2,6 +2,10 @@ package chat.client.message;
 
 public class RecieptMessage extends Message{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 865559936976727861L;
 	private final boolean answer;
 	private final int messageId;
 	

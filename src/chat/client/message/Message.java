@@ -22,7 +22,9 @@ public class Message implements Serializable{
 		
 		GET_CONTACTS,
 		GET_CONVERSATION,
-		GET_USERSTATUS
+		GET_USERSTATUS,
+		
+		UPDATE_STATUS
 	}
 	
 	private String user, msg;	
