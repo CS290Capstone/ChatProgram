@@ -47,6 +47,7 @@ public class Recipient implements Serializable{
 	
 	public Socket createSocket() throws UnknownHostException, IOException{
 		// TODO: Request user IP from server
+		// Get latest IP address that was successful and create a socket.
 		String client = "";
 		return new Socket(client,ServerPorts.ClientListener);
 	}

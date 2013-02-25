@@ -8,6 +8,7 @@ import java.net.Socket;
 import chat.UserCredentials;
 import chat.client.message.Message.MessageType;
 import chat.server.processes.ContactRetriever;
+import chat.server.processes.ConversationRetriever;
 import chat.server.processes.Messager;
 import chat.server.processes.Registerer;
 
@@ -41,7 +42,7 @@ public class CommandListener implements Runnable{
 						Server.getServer().getExecutor().submit(new ContactRetriever(socket,user));
 						break;
 					case GET_CONVERSATION:
-						
+						Server.getServer().getExecutor().submit(new ConversationRetriever(socket,user));
 						break;
 					case GET_USERSTATUS:
 						

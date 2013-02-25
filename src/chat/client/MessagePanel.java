@@ -35,8 +35,8 @@ public class MessagePanel extends JPanel{
 		this.add(lblDate,BorderLayout.EAST);
 	}
 
-	public MessagePanel(String user, String message) {
-		this(new Message(user,message,1));
+	public MessagePanel(String user, String message, int messageId) {
+		this(new Message(user,message,messageId));
 	}
 	
 }

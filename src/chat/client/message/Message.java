@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import chat.client.MessagePanel;
+
 public class Message implements Serializable{
 	
 	/**
@@ -27,26 +29,25 @@ public class Message implements Serializable{
 		UPDATE_STATUS
 	}
 	
-	private String user, msg;	
-	private Date time;
-	private MessageType type = MessageType.TEXT;
-	private int conversationId;
+	protected String user, msg;	
+	protected Date time;
+	protected MessageType type = MessageType.TEXT;
+	protected int conversationId;
 	
 	public Message(String user, String msg, int conversationId){
 		this.user = user;
 		this.msg = msg;
 		this.time = new Date();
-		this.type = MessageType.TEXT;
 		this.conversationId = conversationId;
-	}
-	
-	public Message(String user, MessageType type, int conversationId){
-		this.user = user;
-		this.time = new Date();
-		this.conversationId = conversationId;
-		this.type = type;
 	}
 		
+	public Message(String user, MessageType type, int conversationId) {
+		this.user = user;
+		this.type = type;
+		this.conversationId = conversationId;
+		this.time = new Date();
+	}
+
 	public int getConversationId(){
 		return conversationId;
 	}
@@ -89,6 +90,10 @@ public class Message implements Serializable{
 	private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException{
 		inputStream.defaultReadObject();
 		this.time = new Date();
+	}
+	
+	public MessagePanel toMessagePanel(){
+		return new MessagePanel(this);
 	}
 	
 }

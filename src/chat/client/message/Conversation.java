@@ -10,27 +10,22 @@ public class Conversation implements Serializable{
 	 */
 	private static final long serialVersionUID = -4302372160551159831L;
 	private ArrayList<Recipient> recipients = new ArrayList<Recipient>();
-	private transient ArrayList<Message> messages = new ArrayList<Message>();
+	private ArrayList<Message> messages = new ArrayList<Message>();
 	private int conversationId;
 	
 	public Conversation(int id){
 		this.conversationId = id;
-		init();
 	}
 	
 	public Conversation() {
-		this.conversationId = getConversationId();
-		init();
-	}
-	
-	private void init(){
-		this.recipients = getRecipients();
-		this.messages = getMessages();
+		//this.conversationId = getConversationId();
 	}
 
-	private int getConversationId(){
+	public int getConversationId(){
 		return conversationId;
 	}
+	
+	public void setId(int id){ this.conversationId = id; }
 	
 	public ArrayList<Message> getMessages(){
 		return messages;
@@ -39,6 +34,10 @@ public class Conversation implements Serializable{
 	public ArrayList<Recipient> getRecipients(){
 		return recipients;
 	}
+	
+	public void setMessages(ArrayList<Message> messages){ this.messages = messages; }
+	
+	public void setRecipients(ArrayList<Recipient> recipients){ this.recipients = recipients; }
 		
 	public void leaveConversation(Recipient user){
 		if (recipients!=null && recipients.contains(user))
