@@ -7,10 +7,7 @@ import java.net.Socket;
 
 import chat.UserCredentials;
 import chat.client.message.Message.MessageType;
-import chat.server.processes.ContactRetriever;
-import chat.server.processes.ConversationRetriever;
-import chat.server.processes.Messager;
-import chat.server.processes.Registerer;
+import chat.server.processes.*;
 
 public class CommandListener implements Runnable{
 	private ServerSocket svrSocket;
@@ -41,12 +38,18 @@ public class CommandListener implements Runnable{
 					case GET_CONTACTS:
 						Server.getServer().getExecutor().submit(new ContactRetriever(socket,user));
 						break;
+
 					case GET_CONVERSATION:
 						Server.getServer().getExecutor().submit(new ConversationRetriever(socket,user));
 						break;
 					case GET_USERSTATUS:
 						
 						break;
+
+                    case GET_USERDATA:
+                        Server.getServer().getExecutor().submit(new UserDataRetriever(socket,user));
+                        break;
+
 					case REGISTER:
 						Server.getServer().getExecutor().submit(new Registerer(socket,user));
 						break;

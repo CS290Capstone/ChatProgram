@@ -41,7 +41,6 @@ public class Messager extends ServerProcess{
 				executor.submit(new Runnable(){
 					@Override
 					public void run() {
-						// TODO: Send message to individual clients
 						if (r.isOnline()){
 							try {
 								

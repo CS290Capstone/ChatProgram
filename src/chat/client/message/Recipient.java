@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 import chat.ServerPorts;
 import chat.UserStatus;
+import chat.server.processes.UserDataRetriever;
 
 public class Recipient implements Serializable{
 	/**
@@ -27,7 +28,10 @@ public class Recipient implements Serializable{
 	}
 	
 	public int getUserId() {
-		// TODO: Request userId from server
+        if (user != null && userId == 0){
+            Message msg = new Message(UserDataRetriever.UserData.IDNumber, user);
+            // TODO: Request ID from server
+        }
 		return userId;
 	}
 	
@@ -44,12 +48,15 @@ public class Recipient implements Serializable{
 		// TODO: Request userstatus from server
 		return UserStatus.ONLINE;
 	}
+
+    private String getUserIP(){
+        // TODO: Request user IP from server
+
+        return "";
+    }
 	
-	public Socket createSocket() throws UnknownHostException, IOException{
-		// TODO: Request user IP from server
-		// Get latest IP address that was successful and create a socket.
-		String client = "";
-		return new Socket(client,ServerPorts.ClientListener);
+	public Socket createSocket() throws IOException{
+		return new Socket(getUserIP(),ServerPorts.ClientListener);
 	}
 	
 }

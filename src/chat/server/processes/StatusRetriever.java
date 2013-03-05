@@ -15,7 +15,7 @@ public class StatusRetriever extends ServerProcess{
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		// TODO: Create StatusRetriever
 		
 	}
 	

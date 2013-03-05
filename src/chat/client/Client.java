@@ -339,10 +339,11 @@ public class Client extends JFrame {
 					
 					Thread.sleep(1000);
 					
-				} catch (IOException | InterruptedException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
-					break;
-				}
+				} catch (InterruptedException e){
+                    e.printStackTrace();
+                }
 			}
 			
 		}

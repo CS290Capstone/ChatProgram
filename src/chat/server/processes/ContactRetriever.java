@@ -41,7 +41,6 @@ public class ContactRetriever extends ServerProcess{
 				if (rs != null){
 					ArrayList<Contact> contacts = new ArrayList<Contact>();
 					while (rs.next()){
-						// TODO: Send updated contact status
 						Contact c = new Contact(rs.getString("username"),rs.getString("displayname"),rs.getInt("ucid"),null);
 						contacts.add(c);
 					}
