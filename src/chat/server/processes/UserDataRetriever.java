@@ -10,13 +10,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: skoW7
- * Date: 3/4/13
- * Time: 4:02 PM
- * To change this template use File | Settings | File Templates.
- */
 public class UserDataRetriever extends ServerProcess {
     private Socket sock;
 
@@ -48,10 +41,12 @@ public class UserDataRetriever extends ServerProcess {
                     rs = stmt.executeQuery("SELECT U.uid FROM User U WHERE U.username = '"+data+"'");
                     out.writeInt(rs.getInt("U.uid"));
                     break;
+                    
                 case UserName:
                     rs = stmt.executeQuery("SELECT U.username FROM User U WHERE U.uid = '"+data+"'");
                     out.writeUTF(rs.getString("U.username"));
                     break;
+                    
                 case IPAddress:
                     rs = stmt.executeQuery("SELECT L.ipaddress FROM Login L, User U WHERE U.uid = L.uid AND L.success = true AND U.username = '"+data+"' ORDER BY L.time DESC");
                     out.writeUTF(rs.getString("L.ipaddress"));

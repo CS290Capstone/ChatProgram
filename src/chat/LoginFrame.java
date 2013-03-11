@@ -25,12 +25,19 @@ import javax.swing.JButton;
 
 import chat.client.Client;
 import chat.client.RegisterFrame;
+import chat.client.message.Conversation;
+import chat.client.message.Message;
+import chat.client.message.Message.MessageType;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.HashMap;
 
 @SuppressWarnings("serial")
@@ -250,6 +257,7 @@ public class LoginFrame extends JFrame {
 				new RegisterFrame(txtUsername.getText(),loginFrame).setVisible(true);
 				loginFrame.setVisible(false);
 			}
+			
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				JLabel l = (JLabel) e.getComponent();
@@ -286,8 +294,25 @@ public class LoginFrame extends JFrame {
 	}
 
 	private boolean validateLogin(String user, String pass){
-		// TODO: Validate credentials
-		return true;
+		Socket sock = null;
+        try {
+        	
+    		sock = new Socket();
+			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
+	        ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
+	        
+	        out.writeObject(MessageType.GET_USERDATA);
+	        out.writeObject(new UserCredentials(user, pass, null, 0));
+	        
+	        return in.readBoolean();
+	        
+		} catch (IOException e) {
+			if (sock != null)
+				try {
+					sock.close();
+				} catch (IOException e1) {}
+		}
+		return false;
 	}
 	
 	private void errorMessage(LoginError error){

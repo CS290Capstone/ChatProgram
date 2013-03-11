@@ -27,14 +27,12 @@ public class Messager extends ServerProcess{
 	@Override
 	public void run() {
 		try {
-			//ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			
 			final Message msg = (Message) in.readObject();
 			Conversation conv = Conversation.getConversation(msg.getConversationId());
 			
 			ArrayList<Recipient> recipients = conv.getRecipients();
-			//ArrayList<Recipient> recipients = (ArrayList<Recipient>) in.readObject();
 			
 			ThreadPoolExecutor executor = new ThreadPoolExecutor(10,10,100,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(1000));
 			for (final Recipient r : recipients){

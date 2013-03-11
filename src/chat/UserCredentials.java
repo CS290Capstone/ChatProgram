@@ -1,6 +1,15 @@
 package chat;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
+
+import chat.client.Client;
+import chat.client.message.Message;
+import chat.client.message.Message.MessageType;
+import chat.server.processes.UserDataRetriever.UserData;
 
 public class UserCredentials implements Serializable{
 	
@@ -36,8 +45,29 @@ public class UserCredentials implements Serializable{
 	}
 		
 	public int getUserId(){
-		// TODO: Get userID from server
-		
+		if (userid == 0){
+			Socket sock = null;
+			try {
+				
+				sock = new Socket(Client.getClient().getServerAddress(), ServerPorts.CommandListener);
+				
+				ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
+	            ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
+	            
+	            out.writeObject(MessageType.GET_USERDATA);
+	            out.writeObject(this);
+	            out.writeObject(new Message(UserData.IDNumber, username));
+	            
+	            this.userid = in.readInt();
+				
+			} catch (Exception e) {
+					try {
+						if (sock !=null){
+							sock.close();
+						}
+					} catch (IOException e1) {}
+			}	
+		}
 		return userid;
 	}
 	

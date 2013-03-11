@@ -15,10 +15,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JMenuItem;
 
+import chat.Contact;
 import chat.ServerPorts;
+import chat.UserCredentials;
 import chat.UserStatus;
 import chat.client.message.Conversation;
 import chat.client.message.Message;
+import chat.client.message.Message.MessageType;
+import chat.server.processes.UserDataRetriever.UserData;
 
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
@@ -34,6 +38,7 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -56,6 +61,8 @@ public class Client extends JFrame {
 	private JLabel lblMessagestatus;
 	private JTabbedPane tabConversations;
 	private ClientOptions optionsWindow = new ClientOptions();
+	private String serveraddress;
+	private static Client client;
 
 	class UserStatusActionListener implements ActionListener{
 
@@ -68,6 +75,8 @@ public class Client extends JFrame {
 		}
 		
 	}
+	
+	public String getServerAddress(){ return serveraddress; }
 	
 	public Client(UserStatus s) {
 		UserStatusActionListener statusListener = new UserStatusActionListener();
@@ -294,10 +303,11 @@ public class Client extends JFrame {
 		
 		new Thread(new ClientListener(this,ServerPorts.ClientListener)).start();
 		
+		client = this;
 	}
 	
-	public UserStatus getUserStatus(){
-		return status;
+	public static Client getClient(){
+		return client;
 	}
 	
 	private void setUserStatus(UserStatus s){
@@ -311,6 +321,7 @@ public class Client extends JFrame {
 		}
 	}
 	
+	@Deprecated
 	private class ClientListener implements Runnable{
 		private final Client client;
 		private ServerSocket svrSocket;
@@ -345,9 +356,124 @@ public class Client extends JFrame {
                     e.printStackTrace();
                 }
 			}
-			
 		}
-		
+	}
+	
+
+	public Conversation getConversation(UserCredentials user, int convId){
+		Socket sock = null;
+        try {
+        	
+    		sock = new Socket();
+			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
+	        ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
+	        
+	        out.writeObject(MessageType.GET_CONVERSATION);
+	        out.writeObject(user);
+	        out.writeObject(new Message(user.getName(), MessageType.GET_CONVERSATION, convId));
+	        
+	        return (Conversation) in.readObject();
+	        
+		} catch (IOException e) {
+			if (sock != null)
+				try {
+					sock.close();
+				} catch (IOException e1) {}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Contact[] getContacts(UserCredentials user){
+		Socket sock = null;
+        try {
+        	
+    		sock = new Socket();
+			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
+	        ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
+	        
+	        out.writeObject(MessageType.GET_CONTACTS);
+	        out.writeObject(user);
+	        out.writeObject(new Message(user.getName(), MessageType.GET_CONTACTS, -1));
+	        
+	        return (Contact[]) in.readObject();
+	        
+		} catch (IOException e) {
+			if (sock != null)
+				try {
+					sock.close();
+				} catch (IOException e1) {}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}	
+		return null;
+	}
+	
+	public String getUserData(UserCredentials credentials, String userdata, UserData type){
+		Socket sock = null;
+        try {
+        	
+    		sock = new Socket();
+			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
+	        ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
+	        
+	        out.writeObject(MessageType.GET_USERDATA);
+	        out.writeObject(credentials);
+	        out.writeObject(new Message(type, userdata));
+	        
+	        switch (type){
+				case IDNumber:
+					return ""+in.readInt();
+				case UserName:
+				case IPAddress:
+					return in.readUTF();
+			}	
+	        
+		} catch (IOException e) {
+			if (sock != null)
+				try {
+					sock.close();
+				} catch (IOException e1) {}
+		}
+        
+        return "";
+	}
+	
+	public int registerUser(UserCredentials userdata){
+		Socket s = null;
+		try {
+			
+			s = new Socket(serveraddress,ServerPorts.CommandListener);
+			ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+			
+			out.writeObject(MessageType.REGISTER);
+			out.writeObject(userdata);
+			
+			s.close();
+			// Expecting input from server: integer, 0: fail, 1: success, -1: exception
+			return in.readInt();			
+			
+			
+		} catch (Exception e) {
+			try {
+				if (s != null)
+					s.close();
+			} catch (IOException e1) {}
+			return -1;
+		}
+	}
+	
+	@Deprecated
+	public UserStatus getUserStatus(){
+		return status; // Local Client status
+	}
+	
+	@Deprecated
+	public UserStatus getUserStatus(UserCredentials userdata, String user){
+		// Remote Client status
+		return null;
 	}
 	
 }

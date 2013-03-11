@@ -3,10 +3,11 @@ package chat.client.message;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import chat.ServerPorts;
 import chat.UserStatus;
+import chat.client.Client;
+import chat.server.Server;
 import chat.server.processes.UserDataRetriever;
 
 public class Recipient implements Serializable{
@@ -31,6 +32,7 @@ public class Recipient implements Serializable{
         if (user != null && userId == 0){
             Message msg = new Message(UserDataRetriever.UserData.IDNumber, user);
             // TODO: Request ID from server
+            
         }
 		return userId;
 	}
@@ -48,15 +50,9 @@ public class Recipient implements Serializable{
 		// TODO: Request userstatus from server
 		return UserStatus.ONLINE;
 	}
-
-    private String getUserIP(){
-        // TODO: Request user IP from server
-
-        return "";
-    }
 	
 	public Socket createSocket() throws IOException{
-		return new Socket(getUserIP(),ServerPorts.ClientListener);
+		return new Socket(Server.getServer().getUserIP(this),ServerPorts.ClientListener);
 	}
 	
 }

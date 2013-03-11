@@ -42,9 +42,6 @@ public class CommandListener implements Runnable{
 					case GET_CONVERSATION:
 						Server.getServer().getExecutor().submit(new ConversationRetriever(socket,user));
 						break;
-					case GET_USERSTATUS:
-						
-						break;
 
                     case GET_USERDATA:
                         Server.getServer().getExecutor().submit(new UserDataRetriever(socket,user));
@@ -58,12 +55,21 @@ public class CommandListener implements Runnable{
 						Server.getServer().getExecutor().submit(new Messager(socket, user));
 						break;
 						
-					case FILE_TRANSFER:
+					case LOGIN:
+						Server.getServer().getExecutor().submit(new LoginListener(socket, user));
+						break;
+					/*case GET_USERSTATUS:
+						Server.getServer().getExecutor().submit(new StatusRetriever(socket,user));
+						break;*/
+						
+					/*case FILE_TRANSFER:
 						// XXX: File transfer
 						break;
+						
 					case RECIEPT:
 						// XXX: Client responds with answer to a file transfer or other request.
-						break;
+						break;*/
+						
 					default: // unexpected type
 						Server.m("Unexpected MessageType enum recieved ("+m.name()+") from: "+socket.getInetAddress()+".");
 				}

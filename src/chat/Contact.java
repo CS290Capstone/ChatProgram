@@ -57,6 +57,8 @@ public class Contact implements Serializable{
 			in.close();
 			out.close();
 			
+			s.close();
+			
 			return newStatus;
 			
 		} catch (UnknownHostException e) {
@@ -89,6 +91,8 @@ public class Contact implements Serializable{
 			
 			in.close();
 			out.close();
+			
+			s.close();
 			
 			return contacts;
 			

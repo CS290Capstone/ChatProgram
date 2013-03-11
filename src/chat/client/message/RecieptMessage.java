@@ -1,5 +1,5 @@
 package chat.client.message;
-
+@Deprecated
 public class RecieptMessage extends Message{
 
 	/**
@@ -11,7 +11,7 @@ public class RecieptMessage extends Message{
 	
 	public RecieptMessage(String user, boolean answer, int messageId, int conversationId) {
 		super(user, MessageType.RECIEPT, conversationId);
-		// TODO: Create RecieptMessage
+		// XXX: Create RecieptMessage
 		this.answer = answer;
 		this.messageId = messageId;
 	}

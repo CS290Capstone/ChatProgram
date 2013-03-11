@@ -1,5 +1,6 @@
 package chat.client.message;
 
+@Deprecated
 public class FileMessage extends Message{
 
 	/**
@@ -9,7 +10,7 @@ public class FileMessage extends Message{
 
 	public FileMessage(String user, int conversationId) {
 		super(user, MessageType.FILE_TRANSFER, conversationId);
-		// TODO: Create FileMessage
+		// XXX: Create FileMessage
 	}
 
 }

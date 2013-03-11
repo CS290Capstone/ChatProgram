@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
@@ -22,11 +23,6 @@ import chat.UserCredentials;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 @SuppressWarnings("serial")
 public class RegisterFrame extends JFrame {
@@ -37,9 +33,12 @@ public class RegisterFrame extends JFrame {
 	private JPasswordField pwdPassword;
 	private JPasswordField pwdConfirmpassword;
 	private JTextField txtName;
+	private JLabel lblRegisterError;
+	private RegisterFrame frame;
+
 
 	/**
-	 * Create the frame.
+	 * @wbp.parser.constructor
 	 */
 	public RegisterFrame(String user, LoginFrame login){
 		this(login);
@@ -50,9 +49,7 @@ public class RegisterFrame extends JFrame {
 		return pw1.getPassword() == pw2.getPassword();
 	}
 	
-	/**
-	 * @wbp.parser.constructor
-	 */
+
 	public RegisterFrame(final LoginFrame login) {
 		this.login = login;
 		setResizable(false);
@@ -68,9 +65,9 @@ public class RegisterFrame extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		Component rigidArea = Box.createRigidArea(new Dimension(40, 40));
@@ -160,54 +157,49 @@ public class RegisterFrame extends JFrame {
 		
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
-			@Deprecated
-			public void actionPerformed(ActionEvent arg0) {
-				
-				try {
-					
-					Socket s = new Socket("localhost",8000);
-					System.out.println("Connected to server...");
-					
-					ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-					ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-					/*
-					 * Sending:
-					 * 		UserCredentials
-					 * 
-					 * */
-					System.out.println("Sending Object");
-					out.writeObject(new UserCredentials(txtUsername.getText(),login.concat(pwdPassword.getPassword()), txtName.getText(), 1));
-					System.out.println("Sent Object");
-					
-					
 
-					System.out.println("reading input");
-					
-					System.out.println(in.readBoolean()); // Server Response
-					
-					
-					in.close();
-					out.close();
-					
-					
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			public void actionPerformed(ActionEvent arg0) {
+				int status = Client.getClient().registerUser(new UserCredentials(txtUsername.getText(),login.concat(pwdPassword.getPassword()), txtName.getText(), 1));
 				
+				switch (status){
+					case -1:
+						lblRegisterError.setText("There was an error.  Please contact administrator for help.");
+					case 0:
+						lblRegisterError.setText("User already exists.");
+						break;
+					case 1:
+						JOptionPane.showMessageDialog(null,"Welcome.  You can now log in.");
+						frame.setVisible(false);
+						break;
+				}
 			}
 		});
+		
 		GridBagConstraints gbc_btnSubmit = new GridBagConstraints();
-		gbc_btnSubmit.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSubmit.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSubmit.gridx = 2;
 		gbc_btnSubmit.gridy = 6;
 		panel.add(btnSubmit, gbc_btnSubmit);
 		
 		Component rigidArea_1 = Box.createRigidArea(new Dimension(40, 40));
 		GridBagConstraints gbc_rigidArea_1 = new GridBagConstraints();
+		gbc_rigidArea_1.insets = new Insets(0, 0, 5, 0);
 		gbc_rigidArea_1.gridx = 3;
 		gbc_rigidArea_1.gridy = 6;
 		panel.add(rigidArea_1, gbc_rigidArea_1);
+		
+		lblRegisterError = new JLabel("");
+		GridBagConstraints gbc_lblRegisterError = new GridBagConstraints();
+		gbc_lblRegisterError.gridwidth = 2;
+		gbc_lblRegisterError.insets = new Insets(0, 0, 0, 5);
+		gbc_lblRegisterError.gridx = 1;
+		gbc_lblRegisterError.gridy = 7;
+		panel.add(lblRegisterError, gbc_lblRegisterError);
+		
+		frame = this;
+	}
+	
+	public String getStatus(){
+		return lblRegisterError.getText();
 	}
 }

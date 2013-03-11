@@ -22,21 +22,20 @@ public class Registerer extends ServerProcess{
 		try {
 			
 			ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
-			//ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			
 			if (Server.userExists(user)){
-				out.writeBoolean(false); // Tell client registration failed
-				//System.out.println("Sent false");
+				//out.writeBoolean(false); // Tell client registration failed
+				out.writeInt(0);
 				Server.m("User registration failed: " + user.toString());
 			}else{
 				if (server.registerUser(user)){
-					out.writeBoolean(true);// Tell client registration succeeded
+					//out.writeBoolean(true); // Tell client registration succeeded
+					out.writeInt(1);
 					Server.m("User registered: " + user.toString());
 				}else{
 					out.writeBoolean(false);
-					// Failed message sent written to console by Server.class
+					out.writeInt(-1);
 				}
-				//System.out.println("Sent true");
 			}
 			
 		} catch (IOException e) {

@@ -36,7 +36,7 @@ public class ContactRetriever extends ServerProcess{
 			try {
 				Connection con = DriverManager.getConnection(Server.getServer().getDbUrl());
 				Statement s = con.createStatement();
-				ResultSet rs = s.executeQuery("SELECT U.username, U.displayname, U.uid, UC.ucid FROM User U, UserContacts UC WHERE UC.uid = U.uid;");
+				ResultSet rs = s.executeQuery("SELECT U.username, U.displayname, U.uid, UC.ucid FROM User U, UserContacts UC WHERE UC.uid = U.uid AND U.username = '"+msg.getSender()+"';");
 				
 				if (rs != null){
 					ArrayList<Contact> contacts = new ArrayList<Contact>();
@@ -44,7 +44,7 @@ public class ContactRetriever extends ServerProcess{
 						Contact c = new Contact(rs.getString("username"),rs.getString("displayname"),rs.getInt("ucid"),null);
 						contacts.add(c);
 					}
-					out.writeObject(contacts);
+					out.writeObject(contacts.toArray(new Contact[contacts.size()]));
 				}
 				
 			} catch (SQLException e) {

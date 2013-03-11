@@ -18,6 +18,7 @@ import chat.Contact;
 import chat.ServerPorts;
 import chat.UserCredentials;
 import chat.UserStatus;
+import chat.client.message.Recipient;
 
 public class Server {
 	
@@ -30,6 +31,8 @@ public class Server {
 	private Thread /*registerListener,*/ commandListener;
 	private static Server server;
 	private final ThreadPoolExecutor executor;
+	
+	private String host;
 	
 	public static void main(String args[]){
 		
@@ -59,8 +62,7 @@ public class Server {
 		if (s==null || u==null || p==null){
 			m("Server startup failed: Null database login input!");
 		}else{
-			a = String.format("jdbc:mysql://%s/%s?user=%s&password=%s", a,s,u,p);
-			Server.server = new Server(a);
+			Server.server = new Server(String.format("jdbc:mysql://%s/%s?user=%s&password=%s", a,s,u,p));
 		}
 		
 		
@@ -172,6 +174,25 @@ public class Server {
 		}
 	}
 	
+	public String getUserIP(Recipient r){
+		try {
+			Connection con = DriverManager.getConnection(DB_URL);
+			Statement stmt = con.createStatement();
+			
+			String q = String.format("SELECT L.ipaddress FROM Login L WHERE uid = %d ORDER BY L.time DESC;", r.getUserId());
+			
+			ResultSet rs = stmt.executeQuery(q);
+			
+			if (rs.next()){
+				return rs.getString("L.ipaddress");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 	public static void m(String msg){
 		System.out.println(new Date().toString() + " > " + msg);
 	}
@@ -187,11 +208,13 @@ public class Server {
 		return this.DB_URL;
 	}
 	
+	@Deprecated
 	protected static UserStatus getUserStatus(Contact contact){
 		try{
 			Socket sock = new Socket("localhost",ServerPorts.ClientListener);
 			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			UserStatus status = (UserStatus) in.readObject();
+			sock.close();
 			return status;
 		}catch (IOException e){
 			e.printStackTrace();

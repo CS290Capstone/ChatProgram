@@ -18,17 +18,23 @@ public class Message implements Serializable{
 	private static final long serialVersionUID = 6329945084225106898L;
 
 	public enum MessageType{
-		TEXT, //
-		FILE_TRANSFER, //
-		RECIEPT, //
-		REGISTER, //
+		TEXT,
+		@Deprecated
+		FILE_TRANSFER,
+		@Deprecated
+		RECIEPT,
+		REGISTER,
 		
 		GET_CONTACTS,
 		GET_CONVERSATION,
+		@Deprecated
 		GET_USERSTATUS,
         GET_USERDATA,
-
-		UPDATE_STATUS
+        
+        @Deprecated
+		UPDATE_STATUS,
+		
+		LOGIN,
 	}
 	
 	protected String user, msg;	
