@@ -25,8 +25,6 @@ import javax.swing.JButton;
 
 import chat.client.Client;
 import chat.client.RegisterFrame;
-import chat.client.message.Conversation;
-import chat.client.message.Message;
 import chat.client.message.Message.MessageType;
 
 import java.awt.event.ActionListener;
@@ -333,7 +331,7 @@ public class LoginFrame extends JFrame {
 	
 	private void populateDepartments(){
 		// TEMPORARY
-		// TODO: Retrieve departments from server
+		// XXX: Retrieve departments from server
 		this.departments = new HashMap<String,Integer>();
 		String d[] = {"Human Resources","Retail","Advertising","Public Relations","IT"};
 		

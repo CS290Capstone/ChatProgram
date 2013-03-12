@@ -38,15 +38,20 @@ public class Conversation implements Serializable{
 	public void setMessages(ArrayList<Message> messages){ this.messages = messages; }
 	
 	public void setRecipients(ArrayList<Recipient> recipients){ this.recipients = recipients; }
+	
+	public void addRecipient(Recipient recipient){
+		if (!recipients.contains(recipient))
+			recipients.add(recipient);
+	}
+	
+	public void removeRecipient(Recipient recipient){
+		if (recipients.contains(recipient))
+			recipients.remove(recipient);
+	}
 		
 	public void leaveConversation(Recipient user){
 		if (recipients!=null && recipients.contains(user))
 			recipients.remove(user);
-	}
-	
-	public static Conversation getConversation(int conversationId){
-		// TODO: Retrieve conversation from Server
-		return null;
 	}
 	
 }

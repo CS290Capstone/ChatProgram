@@ -18,6 +18,8 @@ import chat.Contact;
 import chat.ServerPorts;
 import chat.UserCredentials;
 import chat.UserStatus;
+import chat.client.message.Conversation;
+import chat.client.message.Message;
 import chat.client.message.Recipient;
 
 public class Server {
@@ -74,7 +76,7 @@ public class Server {
 	
 	private Server(String url){
 		//Server.server = this;
-		this.DB_URL = url;
+		this.DB_URL = url; System.out.println(url);
 		
 		this.executor = new ThreadPoolExecutor(10,10,1000,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(1000)); 
 		
@@ -139,7 +141,8 @@ public class Server {
 			Connection con = DriverManager.getConnection(Server.getServer().DB_URL);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(String.format("SELECT uid FROM User WHERE username = '%s';", user.getUser()));
-			if (rs != null) return true;
+			
+			if (rs.next()) return true;
 			
 		}catch (SQLException e){
 			m(new String[]{"User Exists check failed: " + user.toString(), "Error: " + e.getMessage()});
@@ -191,6 +194,29 @@ public class Server {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public Conversation getConversation(int id){
+		try {
+			Connection con = DriverManager.getConnection(DB_URL);
+			Statement stmt = con.createStatement();
+			
+			String q = String.format("SELECT M.message, UM.time, U.username FROM Conversation C, UserMessage UM, Message M, User U, WHERE U.uid = C.uid AND C.cid = UM.cid AND UM.mid = M.mid AND C.cid = %d;", id);
+			
+			ResultSet rs = stmt.executeQuery(q);
+			
+			Conversation c = new Conversation(id);
+			ArrayList<Message> messages = new ArrayList<Message>();
+			while (rs.next()){
+				c.addRecipient(new Recipient(rs.getInt("U.uid")));
+				messages.add(new Message(rs.getString("U.username"),rs.getString("M.message"),id)); // Still need to incorporate time into the message object
+			}
+			
+			return c;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static void m(String msg){

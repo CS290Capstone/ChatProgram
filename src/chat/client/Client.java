@@ -61,7 +61,7 @@ public class Client extends JFrame {
 	private JLabel lblMessagestatus;
 	private JTabbedPane tabConversations;
 	private ClientOptions optionsWindow = new ClientOptions();
-	private String serveraddress;
+	private String serveraddress = "localhost";
 	private static Client client;
 
 	class UserStatusActionListener implements ActionListener{
@@ -307,6 +307,7 @@ public class Client extends JFrame {
 	}
 	
 	public static Client getClient(){
+		if (client == null) client = new Client(UserStatus.OFFLINE);
 		return client;
 	}
 	
@@ -440,19 +441,29 @@ public class Client extends JFrame {
         return "";
 	}
 	
+	public static void main(String args[]){
+		System.out.println("registerUser returned: " + Client.getClient().registerUser(new UserCredentials("rawwerwerewrfsdf", "pass", null, 1)));
+	}
+	
 	public int registerUser(UserCredentials userdata){
 		Socket s = null;
 		try {
-			
+			System.out.println("Opening Connection to Server");
 			s = new Socket(serveraddress,ServerPorts.CommandListener);
-			ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+			System.out.println("Connecting to -out- stream.");
 			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+			System.out.println("Sending data.");
 			
 			out.writeObject(MessageType.REGISTER);
 			out.writeObject(userdata);
 			
-			s.close();
+			System.out.println("Connecting to -in- stream.");
+			ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+			
+			//s.close();
 			// Expecting input from server: integer, 0: fail, 1: success, -1: exception
+			
+			System.out.println("Waiting for response.");
 			return in.readInt();			
 			
 			
@@ -461,6 +472,7 @@ public class Client extends JFrame {
 				if (s != null)
 					s.close();
 			} catch (IOException e1) {}
+			System.out.println("Failed to connect. Exception: " + e.getMessage());
 			return -1;
 		}
 	}

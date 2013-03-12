@@ -48,7 +48,7 @@ public class UserCredentials implements Serializable{
 		if (userid == 0){
 			Socket sock = null;
 			try {
-				
+				System.out.println("Attempting to retrieve userID");
 				sock = new Socket(Client.getClient().getServerAddress(), ServerPorts.CommandListener);
 				
 				ObjectInputStream in = new ObjectInputStream(sock.getInputStream());

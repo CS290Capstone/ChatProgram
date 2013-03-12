@@ -14,6 +14,7 @@ import chat.UserCredentials;
 import chat.client.message.Conversation;
 import chat.client.message.Message;
 import chat.client.message.Recipient;
+import chat.server.Server;
 
 public class Messager extends ServerProcess{
 
@@ -24,13 +25,20 @@ public class Messager extends ServerProcess{
 		this.sock = sock;
 	}
 
+	public void writeMessage(Message m){
+		
+	}
+	
 	@Override
 	public void run() {
 		try {
 			ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 			
 			final Message msg = (Message) in.readObject();
-			Conversation conv = Conversation.getConversation(msg.getConversationId());
+			
+			writeMessage(msg);
+			
+			Conversation conv = Server.getServer().getConversation(msg.getConversationId());
 			
 			ArrayList<Recipient> recipients = conv.getRecipients();
 			

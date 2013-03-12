@@ -25,6 +25,7 @@ public class CommandListener implements Runnable{
 		while (true){
 			try {
 				Socket socket = svrSocket.accept();
+				System.out.println("Connected to Client");
 				
 				//ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -33,6 +34,10 @@ public class CommandListener implements Runnable{
 				
 				MessageType m = (MessageType) in.readObject();
 				UserCredentials user = (UserCredentials) in.readObject();
+				
+				System.out.println("Client sent data. " + m.toString());
+				
+				
 				
 				switch (m){
 					case GET_CONTACTS:
@@ -48,7 +53,9 @@ public class CommandListener implements Runnable{
                         break;
 
 					case REGISTER:
-						Server.getServer().getExecutor().submit(new Registerer(socket,user));
+						System.out.println("Sending to Register Process.");
+						new Thread(new Registerer(socket,user)).start();
+						//Server.getServer().getExecutor().submit(new Registerer(socket,user));
 						break;
 						
 					case TEXT:

@@ -159,6 +159,9 @@ public class RegisterFrame extends JFrame {
 		btnSubmit.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Client is " + (Client.getClient() == null ? "null" : "not null."));
+				System.out.println("txtUsername is " + (txtUsername == null ? "null" : "not null."));
+				System.out.println("pwdPassword is " + (pwdPassword == null ? "null" : "not null."));
 				int status = Client.getClient().registerUser(new UserCredentials(txtUsername.getText(),login.concat(pwdPassword.getPassword()), txtName.getText(), 1));
 				
 				switch (status){
